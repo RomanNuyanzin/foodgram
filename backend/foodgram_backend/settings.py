@@ -7,7 +7,11 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-p800b3_g*e$$$@$wi)57f^$!&u
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = ['jyhost.zapto.org', '158.160.157.215', 'localhost', '127.0.0.1']
+
+CSRF_TRUSTED_ORIGINS = ['https://jyhost.zapto.org']
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
