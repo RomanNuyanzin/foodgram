@@ -48,4 +48,4 @@ jobs:
 
       - name: Deploy on server
         run: |
-          ssh -p "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" "cd '${{ secrets.SERVER_APP_PATH }}' && sudo docker compose -f docker-compose.production.yml pull backend gateway && sudo docker compose -f docker-compose.production.yml up -d --force-recreate backend gateway"
+          ssh "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" "cd '${{ secrets.SERVER_APP_PATH }}' && sudo docker compose -f docker-compose.production.yml pull backend gateway && sudo docker compose -f docker-compose.production.yml up -d --force-recreate backend gateway"
