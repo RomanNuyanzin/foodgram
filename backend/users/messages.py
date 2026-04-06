@@ -1,16 +1,19 @@
 EMAIL_REQUIRED_ERROR = 'Вы забыли ввести email.'
 EMAIL_INVALID_ERROR = 'Введите корректный email.'
 EMAIL_MAX_LENGTH_ERROR = 'Вы ввели слишком длинный email.'
-EMAIL_ALREADY_EXISTS_ERROR = 'Пользователь с такой электронной почтой уже существует.'
+EMAIL_ALREADY_EXISTS_ERROR = (
+    'Пользователь с такой электронной почтой уже существует.')
 EMAIL_RESERVED_ERROR = 'Введите реальный email, а не служебное название поля.'
 
 USERNAME_REQUIRED_ERROR = 'Вы забыли ввести username.'
 USERNAME_MAX_LENGTH_ERROR = 'Вы ввели слишком длинный username.'
 USERNAME_ALREADY_EXISTS_ERROR = 'Пользователь с таким username уже существует.'
 USERNAME_INVALID_CHARS_ERROR = (
-    'Username может содержать только буквы, цифры, дефис и нижнее подчёркивание.'
+    'Username может содержать только буквы,'
+    'цифры, дефис и нижнее подчёркивание.'
 )
-USERNAME_RESERVED_ERROR = 'Введите реальный username, а не email или служебное название поля.'
+USERNAME_RESERVED_ERROR = (
+    'Введите реальный username, а не email или служебное название поля.')
 USERNAME_EMAIL_LIKE_ERROR = 'Username не должен быть похож на email.'
 
 FIRST_NAME_REQUIRED_ERROR = 'Вы забыли ввести имя.'

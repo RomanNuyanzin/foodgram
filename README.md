@@ -39,7 +39,6 @@ Foodgram — это веб-приложение для публикации ре
 
 ## Структура проекта
 
-```text
 foodgram/
 ├── backend/
 ├── frontend/

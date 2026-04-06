@@ -10,7 +10,8 @@ class Command(BaseCommand):
     help = 'Импортирует ингредиенты из data/ingredients.csv'
 
     def handle(self, *args, **options):
-        file_path = Path(__file__).resolve().parents[4] / 'data' / 'ingredients.csv'
+        file_path = (
+            Path(__file__).resolve().parents[4] / 'data' / 'ingredients.csv')
 
         if not file_path.exists():
             self.stdout.write(

@@ -22,14 +22,16 @@ def custom_exception_handler(exc, context):
     if response is None:
         return response
 
-    if isinstance(exc, (exceptions.NotAuthenticated, exceptions.AuthenticationFailed)):
+    if isinstance(exc, (exceptions.NotAuthenticated,
+                        exceptions.AuthenticationFailed)):
         return Response(
             {'detail': AUTH_REQUIRED_MESSAGE},
             status=status.HTTP_401_UNAUTHORIZED,
         )
 
     if response.status_code == status.HTTP_404_NOT_FOUND:
-        detail = response.data.get('detail') if isinstance(response.data, dict) else None
+        detail = response.data.get('detail') if (
+            isinstance(response.data, dict)) else None
         detail_text = str(detail)
 
         if detail_text == 'No User matches the given query.':

@@ -68,7 +68,8 @@ def validate_username_value(value: str) -> str:
 
     if contains_reserved_fragment(value):
         raise ValueError(
-            'Введите реальный username, а не email или служебное название поля.'
+            'Введите реальный username, '
+            'а не email или служебное название поля.'
         )
 
     return value
