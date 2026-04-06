@@ -1,0 +1,44 @@
+services:
+  db:
+    container_name: foodgram-db
+    image: postgres:16-alpine
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  backend:
+    container_name: foodgram-back
+    image: romannuyanzin/foodgram_backend:latest
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - static_value:/app/static_backend
+      - media_value:/app/media
+    command: >
+      sh -c "until nc -z db 5432;
+      do
+        echo 'Waiting for postgres...';
+        sleep 2;
+      done;
+      python manage.py migrate &&
+      python manage.py collectstatic --noinput &&
+      gunicorn foodgram_backend.wsgi:application --bind 0.0.0.0:8000"
+
+  gateway:
+    container_name: foodgram-gateway
+    image: romannuyanzin/foodgram_gateway:latest
+    ports:
+      - "127.0.0.1:9001:80"
+    depends_on:
+      - backend
+    volumes:
+      - static_value:/static/
+      - media_value:/media/
+
+volumes:
+  pg_data:
+  static_value:
+  media_value:
