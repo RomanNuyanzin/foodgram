@@ -6,6 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -31,6 +32,10 @@ from recipes.serializers import (
 )
 
 
+class IngredientSearchFilter(SearchFilter):
+    search_param = 'name'
+
+
 class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -39,16 +44,12 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
+    queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (AllowAny,)
     pagination_class = None
-
-    def get_queryset(self):
-        queryset = Ingredient.objects.all()
-        name = self.request.query_params.get('name')
-        if name:
-            queryset = queryset.filter(name__istartswith=name)
-        return queryset
+    filter_backends = (IngredientSearchFilter,)
+    search_fields = ('^name',)
 
 
 class RecipeViewSet(ModelViewSet):

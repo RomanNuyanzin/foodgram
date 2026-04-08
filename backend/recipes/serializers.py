@@ -1,6 +1,11 @@
 from rest_framework import serializers
 
 from api.fields import Base64ImageField
+from recipes.constants import (
+    MIN_COOKING_TIME,
+    MIN_INGREDIENT_AMOUNT,
+    RECIPE_NAME_MAX_LENGTH,
+)
 from recipes.fields import (
     IngredientPrimaryKeyRelatedField,
     TagPrimaryKeyRelatedField,
@@ -121,7 +126,7 @@ class RecipeIngredientWriteSerializer(serializers.Serializer):
         queryset=Ingredient.objects.all()
     )
     amount = serializers.IntegerField(
-        min_value=1,
+        min_value=MIN_INGREDIENT_AMOUNT,
         error_messages={
             'required': RECIPE_INGREDIENT_AMOUNT_REQUIRED_ERROR,
             'invalid': RECIPE_INGREDIENT_AMOUNT_INVALID_ERROR,
@@ -148,7 +153,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     name = serializers.CharField(
         required=True,
         allow_blank=False,
-        max_length=256,
+        max_length=RECIPE_NAME_MAX_LENGTH,
         error_messages={
             'required': RECIPE_NAME_REQUIRED_ERROR,
             'blank': RECIPE_NAME_REQUIRED_ERROR,
@@ -165,7 +170,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     )
     cooking_time = serializers.IntegerField(
         required=True,
-        min_value=1,
+        min_value=MIN_COOKING_TIME,
         error_messages={
             'required': RECIPE_COOKING_TIME_REQUIRED_ERROR,
             'invalid': RECIPE_COOKING_TIME_INVALID_ERROR,
@@ -188,7 +193,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         ingredients = attrs.get('ingredients', serializers.empty)
         tags = attrs.get('tags', serializers.empty)
 
-        # Для PATCH и POST ингредиенты обязательны всегда
         if ingredients is serializers.empty or not ingredients:
             raise serializers.ValidationError(
                 {'ingredients': RECIPE_INGREDIENTS_REQUIRED_ERROR}
@@ -200,7 +204,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 {'ingredients': RECIPE_DUPLICATE_INGREDIENTS_ERROR}
             )
 
-        # Для PATCH и POST теги обязательны всегда
         if tags is serializers.empty or not tags:
             raise serializers.ValidationError(
                 {'tags': RECIPE_TAGS_REQUIRED_ERROR}
@@ -227,11 +230,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
+        validated_data['author'] = self.context['request'].user
 
-        recipe = Recipe.objects.create(
-            author=self.context['request'].user,
-            **validated_data,
-        )
+        recipe = super().create(validated_data)
         recipe.tags.set(tags)
         self._save_ingredients(recipe, ingredients)
         return recipe
@@ -240,10 +241,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
 
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-
+        instance = super().update(instance, validated_data)
         instance.tags.set(tags)
         instance.recipe_ingredients.all().delete()
         self._save_ingredients(instance, ingredients)

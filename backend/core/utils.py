@@ -1,4 +1,4 @@
-ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz'
+from .constants import BASE36_ALPHABET, BASE36_RADIX
 
 
 def encode_base36(number):
@@ -10,10 +10,10 @@ def encode_base36(number):
 
     result = ''
     while number:
-        number, remainder = divmod(number, 36)
-        result = ALPHABET[remainder] + result
+        number, remainder = divmod(number, BASE36_RADIX)
+        result = BASE36_ALPHABET[remainder] + result
     return result
 
 
 def decode_base36(value):
-    return int(value, 36)
+    return int(value, BASE36_RADIX)

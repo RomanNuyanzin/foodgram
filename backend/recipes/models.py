@@ -2,16 +2,26 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 
+from .constants import (
+    INGREDIENT_NAME_MAX_LENGTH,
+    MEASUREMENT_UNIT_MAX_LENGTH,
+    MIN_COOKING_TIME,
+    MIN_INGREDIENT_AMOUNT,
+    RECIPE_NAME_MAX_LENGTH,
+    TAG_NAME_MAX_LENGTH,
+    TAG_SLUG_MAX_LENGTH,
+)
+
 
 class Tag(models.Model):
     name = models.CharField(
         'Название',
-        max_length=32,
+        max_length=TAG_NAME_MAX_LENGTH,
         unique=True,
     )
     slug = models.SlugField(
         'Слаг',
-        max_length=32,
+        max_length=TAG_SLUG_MAX_LENGTH,
         unique=True,
     )
 
@@ -27,12 +37,12 @@ class Tag(models.Model):
 class Ingredient(models.Model):
     name = models.CharField(
         'Название',
-        max_length=128,
+        max_length=INGREDIENT_NAME_MAX_LENGTH,
         db_index=True,
     )
     measurement_unit = models.CharField(
         'Единица измерения',
-        max_length=64,
+        max_length=MEASUREMENT_UNIT_MAX_LENGTH,
     )
 
     class Meta:
@@ -59,7 +69,7 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         'Название',
-        max_length=256,
+        max_length=RECIPE_NAME_MAX_LENGTH,
     )
     image = models.ImageField(
         'Изображение',
@@ -70,7 +80,7 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления (мин)',
-        validators=[MinValueValidator(1)],
+        validators=[MinValueValidator(MIN_COOKING_TIME)],
     )
     tags = models.ManyToManyField(
         Tag,
@@ -113,7 +123,7 @@ class RecipeIngredient(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         'Количество',
-        validators=[MinValueValidator(1)],
+        validators=[MinValueValidator(MIN_INGREDIENT_AMOUNT)],
     )
 
     class Meta:

@@ -1,6 +1,7 @@
 services:
   db:
     container_name: foodgram-db
+    restart: always
     image: postgres:16-alpine
     env_file:
       - .env
@@ -9,6 +10,7 @@ services:
 
   backend:
     container_name: foodgram-back
+    restart: always
     image: romannuyanzin/foodgram_backend:latest
     env_file:
       - .env
@@ -29,6 +31,7 @@ services:
 
   gateway:
     container_name: foodgram-gateway
+    restart: always
     image: romannuyanzin/foodgram_gateway:latest
     ports:
       - "127.0.0.1:9001:80"
