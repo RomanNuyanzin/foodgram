@@ -108,7 +108,7 @@ docker compose exec backend python manage.py createsuperuser
 - Данные для входа в Django-admin
 - Логин: admin@admin.ru
 - Пароль: 123admin!!!
-- Адрес проекта https://jyhost.zapto.org/foodgram/
+- Адрес проекта https://jyhost.zapto.org/foodgram/ - в данный момент не поддерживается
 
 ---
 
